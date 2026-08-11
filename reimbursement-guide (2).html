@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Can I Get Reimbursed? - Columbia Engineering</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700;800;900&family=Fraunces:ital,wght@0,400;0,500;0,600;1,400;1,500&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+:root{
+  --blue:#3f57bd;--blue-dark:#2e42a0;--navy:#183765;--ink:#172033;--muted:#64748b;
+  --line:#d8dee8;--paper-edge:#d4cfbf;--paper-ink:#1a1d20;--paper-ink-dim:#5a5d62;
+  --gold:#B68F47;--gold-bright:#C9A050;--gold-bg:#fff8df;
+  --bg:#e9e9e9;--white:#ffffff;--off-white:#fffdf6;
+  --green:#166534;--green-bg:#f0fdf4;--green-line:#bbf7d0;--green-solid:#16a34a;
+  --teal:#0f766e;--teal-bg:#f0fdfa;--teal-line:#99f6e4;--teal-solid:#14b8a6;
+  --amber:#92400e;--amber-bg:#fffbeb;--amber-line:#fde68a;--amber-solid:#d97706;
+  --red:#b91c1c;--red-bg:#fff5f5;--red-line:#fecaca;--red-solid:#dc2626;
+  --indigo:#4338ca;--indigo-bg:#eef2ff;--indigo-line:#c7d2fe;--indigo-solid:#6366f1;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg);color:var(--ink);font-family:'Source Sans 3',Arial,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+html{zoom:1.1}
+body{background-image:linear-gradient(rgba(117,168,201,.13) 1px,transparent 1px),linear-gradient(90deg,rgba(117,168,201,.13) 1px,transparent 1px);background-size:40px 40px,40px 40px}
+
+.topbar{height:60px;background:var(--white);border-bottom:1px solid #b8c5d8;display:flex;align-items:center;padding:0 1.5rem;gap:.9rem;position:sticky;top:0;z-index:300;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.logo{color:var(--navy);font-size:13px;font-weight:800;line-height:1.1}
+.logo span{display:block;font-size:7px;letter-spacing:.1em;font-weight:600;color:var(--muted)}
+.topbar-divider{width:1px;height:26px;background:var(--line)}
+.topbar-title{font-size:16px;color:var(--navy);font-weight:600}
+.revised-pill{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;background:var(--gold-bg);border:1.5px solid var(--gold);color:var(--gold-bright);border-radius:999px;padding:.2rem .6rem;font-weight:700}
+
+main{max-width:760px;margin:0 auto;padding:2.25rem 1.5rem 4rem}
+.hero{margin-bottom:1.75rem}
+.hero-eyebrow{font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:.6rem;font-weight:700}
+.hero h1{font-family:'Fraunces',serif;font-size:2.6rem;font-weight:400;color:var(--paper-ink);line-height:1.05;letter-spacing:-.02em;margin-bottom:.7rem}
+.hero h1 em{font-style:italic;color:var(--blue)}
+.hero-rule{width:46px;height:3px;background:var(--gold);margin-bottom:.8rem}
+.hero-sub{font-size:1.02rem;color:var(--paper-ink-dim);line-height:1.55;max-width:560px}
+
+/* APP */
+.app{background:var(--white);border:2px solid var(--navy);border-radius:18px;box-shadow:0 12px 44px rgba(24,55,101,.13);overflow:hidden}
+.crumbs{display:flex;flex-wrap:wrap;gap:.35rem;align-items:center;padding:.7rem 1.4rem;background:var(--navy);font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.04em;color:rgba(255,255,255,.55)}
+.crumbs b{color:#fff;font-weight:600}
+.crumbs .sep{opacity:.4}
+.stage{padding:1.6rem 1.6rem 1.75rem;animation:swap .28s cubic-bezier(.25,.46,.45,.94)}
+@keyframes swap{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.lead{font-family:'Fraunces',serif;font-size:1.45rem;color:var(--navy);line-height:1.25;margin-bottom:.35rem}
+.sub{font-size:.9rem;color:var(--muted);line-height:1.5;margin-bottom:1.2rem}
+
+/* HOME TILES */
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}
+.tile{display:flex;gap:.85rem;align-items:flex-start;text-align:left;background:var(--off-white);border:1.5px solid var(--line);border-radius:12px;padding:1.05rem 1.1rem;cursor:pointer;transition:all .16s;font:inherit}
+.tile:hover{border-color:var(--blue);transform:translateY(-2px);box-shadow:0 8px 20px rgba(63,87,189,.1)}
+.tile-ico{font-size:1.6rem;line-height:1;flex-shrink:0}
+.tile-t{display:block;font-weight:800;color:var(--navy);font-size:.98rem;margin-bottom:.15rem}
+.tile-s{font-size:.8rem;color:var(--muted);line-height:1.4}
+
+/* OPTIONS */
+.opts{display:grid;gap:.6rem}
+.opt{display:flex;justify-content:space-between;align-items:center;gap:1rem;text-align:left;background:var(--off-white);border:1.5px solid var(--line);border-left:4px solid var(--blue);border-radius:0 10px 10px 0;padding:.9rem 1.1rem;cursor:pointer;transition:all .15s;font:inherit;width:100%}
+.opt:hover{border-color:var(--blue);background:#f4f7ff;transform:translateX(3px)}
+.opt-main{display:block;font-weight:700;color:var(--paper-ink);font-size:.96rem}
+.opt-sub{font-size:.8rem;color:var(--muted);margin-top:.1rem;line-height:1.4}
+.opt-arrow{color:var(--blue);font-weight:700;flex-shrink:0}
+
+/* NUMBER / DATE INPUT */
+.field{display:flex;gap:.6rem;align-items:stretch;margin-top:.3rem}
+.field-wrap{position:relative;flex:1}
+.field-prefix{position:absolute;left:.9rem;top:50%;transform:translateY(-50%);color:var(--muted);font-weight:700;font-family:'JetBrains Mono',monospace}
+.field input{width:100%;font-family:'Source Sans 3',sans-serif;font-size:1.15rem;font-weight:600;padding:.85rem .9rem;border:1.5px solid var(--line);border-radius:10px;background:var(--off-white);color:var(--ink);outline:none;transition:all .15s}
+.field input.has-prefix{padding-left:2rem}
+.field input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(63,87,189,.12)}
+.field-unit{align-self:center;font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--muted);white-space:nowrap}
+.go-btn{font:inherit;font-weight:800;font-size:.95rem;color:#fff;background:var(--navy);border:none;border-radius:10px;padding:0 1.4rem;cursor:pointer;transition:background .15s;white-space:nowrap}
+.go-btn:hover{background:var(--blue)}
+.go-btn:disabled{background:#c3ccdb;cursor:not-allowed}
+
+/* RESULT CARD */
+.rcard{border-radius:14px;overflow:hidden;border:1.5px solid var(--line)}
+.rc-banner{display:flex;align-items:center;gap:.6rem;padding:1rem 1.3rem;font-family:'Fraunces',serif;font-size:1.35rem;color:#fff}
+.rc-ico{font-family:'Source Sans 3';font-weight:800;font-size:1.1rem;width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.22);display:flex;align-items:center;justify-content:center}
+.rc-body{padding:1.25rem 1.3rem 1.4rem;background:var(--white)}
+.rc-subject{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:.5rem}
+.rc-why{font-size:1.02rem;color:var(--paper-ink);line-height:1.5;margin-bottom:1.1rem;font-weight:500}
+.rc-block{margin-bottom:1rem}
+.rc-h{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;font-weight:700;margin-bottom:.5rem;display:flex;align-items:center;gap:8px}
+.rc-h::before{content:"";width:16px;height:1px;background:currentColor;opacity:.5}
+.rc-need .rc-h{color:var(--blue)}
+.rc-next .rc-h{color:var(--green)}
+.rc-list{list-style:none;display:grid;gap:.35rem}
+.rc-list li{display:flex;gap:.55rem;font-size:.9rem;color:var(--paper-ink-dim);line-height:1.5}
+.rc-need .rc-list li::before{content:"▸";color:var(--blue);font-weight:700;flex-shrink:0}
+.rc-next .rc-list li::before{content:"→";color:var(--green-solid);font-weight:700;flex-shrink:0;font-family:'JetBrains Mono',monospace}
+.rc-watch{background:var(--amber-bg);border:1px solid var(--amber-line);border-radius:8px;padding:.7rem .9rem;font-size:.87rem;color:#7a3d0a;line-height:1.5;margin-top:.35rem}
+.rc-watch b{color:var(--amber);font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;display:block;margin-bottom:.2rem}
+.rc-scope{margin-top:1rem;display:flex;gap:.4rem;flex-wrap:wrap}
+.scope-pill{font-family:'JetBrains Mono',monospace;font-size:.56rem;letter-spacing:.08em;text-transform:uppercase;font-weight:700;padding:.2rem .55rem;border-radius:999px}
+.scope-uni{background:#eef2ff;color:var(--navy);border:1px solid var(--indigo-line)}
+.scope-seas{background:var(--gold-bg);color:var(--gold-bright);border:1px solid var(--gold)}
+
+/* outcome colors */
+.rc-yes .rc-banner{background:var(--green-solid)} .rc-yes{border-color:var(--green-line)}
+.rc-cond .rc-banner{background:var(--teal-solid)} .rc-cond{border-color:var(--teal-line)}
+.rc-approval .rc-banner{background:var(--amber-solid)} .rc-approval{border-color:var(--amber-line)}
+.rc-no .rc-banner{background:var(--red-solid)} .rc-no{border-color:var(--red-line)}
+.rc-process .rc-banner{background:var(--indigo-solid)} .rc-process{border-color:var(--indigo-line)}
+
+/* calc highlight */
+.calc{background:var(--navy);color:#fff;border-radius:10px;padding:.9rem 1.1rem;margin-bottom:1.1rem;text-align:center}
+.calc-big{font-family:'Fraunces',serif;font-size:2rem;line-height:1}
+.calc-cap{font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.06em;opacity:.8;margin-top:.35rem}
+
+/* MEAL CALCULATOR */
+.mc-people{display:flex;align-items:center;gap:1rem;background:var(--off-white);border:1.5px solid var(--line);border-radius:10px;padding:.75rem 1rem;margin-bottom:.9rem}
+.mc-people-lbl{flex:1}
+.mc-people-lbl strong{display:block;font-size:.9rem;color:var(--navy)}
+.mc-people-lbl span{font-size:.76rem;color:var(--muted)}
+.mc-stepper{display:flex;align-items:center;gap:.55rem}
+.mc-step-btn{width:32px;height:32px;border-radius:8px;border:1.5px solid var(--line);background:var(--white);color:var(--navy);font-size:1.15rem;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;font:inherit;font-weight:700}
+.mc-step-btn:hover{border-color:var(--blue);color:var(--blue)}
+.mc-people-val{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:1.05rem;color:var(--navy);min-width:20px;text-align:center}
+.mc-grid{border:1.5px solid var(--line);border-radius:10px;overflow:hidden;margin-bottom:.7rem}
+.mc-row{display:flex;align-items:stretch;border-bottom:1px dashed var(--line)}
+.mc-row:last-child{border-bottom:none}
+.mc-row-l{flex:1;padding:.65rem .9rem;display:flex;flex-direction:column;justify-content:center;gap:.1rem;background:var(--off-white)}
+.mc-row-t{font-weight:700;font-size:.87rem;color:var(--paper-ink)}
+.mc-row-s{font-size:.73rem;color:var(--muted)}
+.mc-row-r{display:flex;align-items:center;gap:.4rem;padding:.65rem .9rem;border-left:1px dashed var(--line);background:var(--white)}
+.mc-dollar{font-family:'JetBrains Mono',monospace;font-size:.85rem;color:var(--muted)}
+.mc-inp{width:96px;font-family:'JetBrains Mono',monospace;font-size:.92rem;font-weight:600;padding:.4rem .5rem;border:1.5px solid var(--line);border-radius:7px;text-align:right;outline:none;background:var(--off-white);color:var(--ink);transition:border-color .15s}
+.mc-inp:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(63,87,189,.12)}
+.mc-inp.warn{border-color:var(--amber-solid)}
+.mc-inp.over{border-color:var(--red-solid)}
+.mc-alert{border-radius:8px;padding:.55rem .8rem;font-size:.82rem;line-height:1.5;margin-bottom:.55rem;display:flex;gap:.5rem;align-items:flex-start}
+.mc-alert.ok{background:var(--green-bg);border:1px solid var(--green-line);color:var(--green)}
+.mc-alert.warn{background:var(--amber-bg);border:1px solid var(--amber-line);color:var(--amber)}
+
+/* CONCUR ITEMIZATION BLOCK (used in calculator preview + result card) */
+.item-block{border:1.5px solid var(--line);border-radius:10px;overflow:hidden;margin-bottom:.85rem}
+.item-hd{background:var(--off-white);padding:.55rem .9rem;font-family:'JetBrains Mono',monospace;font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line)}
+.item-row{display:flex;justify-content:space-between;align-items:center;padding:.55rem .9rem;border-bottom:1px dashed var(--line);gap:.8rem}
+.item-row:last-child{border-bottom:none}
+.item-row.total{background:var(--off-white);font-weight:800}
+.item-l strong{display:block;font-size:.86rem;color:var(--paper-ink)}
+.item-l span{font-size:.72rem;color:var(--muted)}
+.item-amt{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:.92rem;color:var(--green);white-space:nowrap}
+.item-row.total .item-amt{color:var(--navy);font-size:1rem}
+
+/* business purpose builder */
+.builder{border:1.5px dashed var(--blue);border-radius:10px;padding:1rem 1.1rem;margin-top:.4rem;background:#f8faff}
+.builder-t{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--blue);font-weight:700;margin-bottom:.6rem}
+.builder input{width:100%;font-family:'Source Sans 3';font-size:.9rem;padding:.55rem .7rem;border:1.5px solid var(--line);border-radius:8px;margin-bottom:.5rem;outline:none}
+.builder input:focus{border-color:var(--blue)}
+.builder-out{background:var(--white);border:1px solid var(--green-line);border-left:4px solid var(--green-solid);border-radius:8px;padding:.65rem .8rem;font-size:.9rem;color:var(--paper-ink);line-height:1.45;margin-top:.3rem}
+.builder-out .ph{color:var(--muted);font-style:italic}
+.builder-copy{margin-top:.5rem;font:inherit;font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.06em;font-weight:700;text-transform:uppercase;color:var(--blue);background:none;border:1.5px solid var(--blue);border-radius:6px;padding:.3rem .7rem;cursor:pointer;transition:all .15s}
+.builder-copy:hover{background:var(--blue);color:#fff}
+
+/* nav */
+.stage-nav{display:flex;gap:.6rem;margin-top:1.4rem;padding-top:1.1rem;border-top:1px solid var(--line)}
+.nav-btn{font:inherit;font-size:.82rem;font-weight:700;color:var(--muted);background:none;border:1.5px solid var(--line);border-radius:8px;padding:.5rem .9rem;cursor:pointer;transition:all .15s}
+.nav-btn:hover{border-color:var(--navy);color:var(--navy)}
+.nav-btn.primary{color:var(--blue);border-color:var(--blue)}
+
+/* footer reference */
+.foot{margin-top:2.25rem;display:grid;grid-template-columns:1fr 1fr 1fr;gap:.8rem}
+.fcard{background:var(--white);border:1.5px solid var(--line);border-radius:12px;padding:.9rem 1rem}
+.fcard-l{font-family:'JetBrains Mono',monospace;font-size:.56rem;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-bright);font-weight:700;margin-bottom:.5rem}
+.fcard-b{font-family:'Fraunces',serif;font-size:1.3rem;color:var(--navy);line-height:1}
+.fcard-s{font-size:.76rem;color:var(--muted);margin-top:.25rem;line-height:1.4}
+.fcard a,.fcard .mono{color:var(--blue);text-decoration:none;font-family:'JetBrains Mono',monospace;font-size:.74rem;word-break:break-all}
+.fcard .mono.nowrap{white-space:nowrap;word-break:normal;font-size:.62rem;letter-spacing:-.01em}
+.disclaimer{margin-top:1.4rem;font-size:.75rem;color:var(--muted);line-height:1.5;text-align:center}
+
+/* MEAL THRESHOLDS - sticky notes */
+.thresholds{margin-top:2.75rem}
+.th-eyebrow{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:var(--gold);font-weight:600;margin-bottom:.6rem;display:inline-flex;align-items:center;gap:12px}
+.th-eyebrow::before,.th-eyebrow::after{content:"";display:block;width:24px;height:1px;background:var(--gold)}
+.th-title{font-family:'Fraunces',serif;font-size:1.85rem;font-weight:400;letter-spacing:-.01em;color:var(--paper-ink);line-height:1.1;margin-bottom:1.9rem}
+.th-title em{font-style:italic;color:var(--blue)}
+.threshold-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-bottom:1.5rem}
+.threshold-card{position:relative;padding:1.95rem 1rem 1.45rem;text-align:center;border-radius:8px;transition:transform .2s ease,box-shadow .2s ease}
+.threshold-card:nth-child(1){background:#fbe588;transform:rotate(-1.4deg);box-shadow:2px 5px 10px rgba(0,0,0,.12),7px 14px 24px rgba(0,0,0,.09)}
+.threshold-card:nth-child(2){background:#c5dceb;transform:rotate(1deg);box-shadow:2px 5px 10px rgba(0,0,0,.12),7px 14px 24px rgba(0,0,0,.09)}
+.threshold-card:nth-child(3){background:#cfe3c5;transform:rotate(-.6deg);box-shadow:2px 5px 10px rgba(0,0,0,.12),7px 14px 24px rgba(0,0,0,.09)}
+.threshold-card::before{content:"";position:absolute;top:-11px;left:50%;width:74px;height:22px;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.threshold-card:nth-child(1)::before{background:rgba(197,220,235,.7);transform:translateX(-50%) rotate(-3deg)}
+.threshold-card:nth-child(2)::before{background:rgba(251,229,136,.65);transform:translateX(-50%) rotate(2deg)}
+.threshold-card:nth-child(3)::before{background:rgba(251,229,136,.6);transform:translateX(-50%) rotate(-2deg)}
+.threshold-card:hover{transform:translateY(-3px) rotate(0deg);box-shadow:4px 9px 18px rgba(0,0,0,.15),9px 20px 34px rgba(0,0,0,.12)}
+.threshold-label{font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.2em;text-transform:uppercase;color:#3f4348;font-weight:700;margin-bottom:.55rem}
+.threshold-amount{font-family:'Fraunces',serif;font-size:2.9rem;font-weight:400;color:var(--navy);line-height:1}
+.threshold-sub{font-family:'JetBrains Mono',monospace;font-size:.6rem;color:#5a5d62;margin-top:.4rem;letter-spacing:.06em}
+.th-note{text-align:center;font-size:.86rem;color:var(--muted);line-height:1.5}
+.th-note b{color:var(--blue);font-weight:700}
+
+/* LODGING THRESHOLDS */
+.lodge-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-top:1.7rem}
+.lodge-card{background:var(--off-white);border-radius:10px;padding:1.7rem 1.3rem 1.5rem;text-align:center;box-shadow:0 3px 10px rgba(0,0,0,.05)}
+.lodge-dom{border-top:3px solid var(--blue);background:linear-gradient(180deg,rgba(63,87,189,.07),var(--off-white) 55%)}
+.lodge-intl{border-top:3px solid var(--gold);background:linear-gradient(180deg,rgba(182,143,71,.1),var(--off-white) 55%)}
+.lodge-dom .lodge-amount{color:var(--blue-dark)}
+.lodge-intl .lodge-amount{color:var(--gold-bright)}
+.lodge-region{font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700;margin-bottom:.6rem}
+.lodge-amount{font-family:'Fraunces',serif;font-size:2.6rem;font-weight:400;color:var(--navy);line-height:1}
+.lodge-sub{font-family:'JetBrains Mono',monospace;font-size:.62rem;color:#5a5d62;margin-top:.4rem;letter-spacing:.04em}
+.lodge-rule{margin-top:.85rem;font-size:.78rem;color:var(--red);line-height:1.6;font-weight:600}
+
+@media(max-width:640px){
+  main{padding:1.75rem 1.05rem 3rem}
+  .hero h1{font-size:2rem}
+  .tiles{grid-template-columns:1fr}
+  .foot{grid-template-columns:1fr}
+  .topbar-title{display:none}
+  .field{flex-direction:column}
+  .go-btn{padding:.75rem}
+  .threshold-grid{gap:.55rem}
+  .threshold-card{padding:1.4rem .4rem 1rem}
+  .threshold-amount{font-size:1.9rem}
+  .threshold-card::before{width:52px;height:16px}
+  .lodge-grid{grid-template-columns:1fr;gap:.9rem}
+  .lodge-amount{font-size:2.1rem}
+}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="logo">♔ Columbia University<span>COLUMBIA ENGINEERING</span></div>
+  <div class="topbar-divider"></div>
+  <div class="topbar-title">Reimbursement Checker</div>
+  <span class="revised-pill">Interactive Guide</span>
+</div>
+
+<main>
+  <div class="hero">
+    <div class="hero-eyebrow">Columbia Engineering</div>
+    <h1>Can I Get <em>Reimbursed?</em></h1>
+    <div class="hero-rule"></div>
+    <p class="hero-sub">Ask it like you'd ask a finance partner. Answer two or three quick questions and get a straight verdict - plus exactly what to save and what to do next in Concur.</p>
+  </div>
+
+  <div class="app">
+    <div class="crumbs" id="crumbs"></div>
+    <div class="stage" id="stage"></div>
+  </div>
+
+  <div class="thresholds">
+    <div class="th-eyebrow">University Policy</div>
+    <h2 class="th-title">Meal <em>Thresholds</em></h2>
+    <div class="threshold-grid">
+      <div class="threshold-card"><div class="threshold-label">Breakfast</div><div class="threshold-amount">$25</div><div class="threshold-sub">per person, excl. tax &amp; tip</div></div>
+      <div class="threshold-card"><div class="threshold-label">Lunch</div><div class="threshold-amount">$35</div><div class="threshold-sub">per person, excl. tax &amp; tip</div></div>
+      <div class="threshold-card"><div class="threshold-label">Dinner</div><div class="threshold-amount">$75</div><div class="threshold-sub">per person, excl. tax &amp; tip</div></div>
+    </div>
+    <p class="th-note">SBO approval required if <b>thresholds</b> exceeded - excess must be segregated. Tips in excess of <b>20%</b> will not be reimbursed.</p>
+  </div>
+
+  <div class="thresholds">
+    <div class="th-eyebrow">Accommodations</div>
+    <h2 class="th-title">Lodging <em>Thresholds</em></h2>
+    <div class="lodge-grid">
+      <div class="lodge-card lodge-dom">
+        <div class="lodge-region">🇺🇸 Domestic (US &amp; Territories)</div>
+        <div class="lodge-amount">$350</div>
+        <div class="lodge-sub">per night, excl. taxes &amp; fees</div>
+      </div>
+      <div class="lodge-card lodge-intl">
+        <div class="lodge-region">🌐 International</div>
+        <div class="lodge-amount">$400</div>
+        <div class="lodge-sub">per night (USD), excl. taxes &amp; fees</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot">
+    <div class="fcard"><div class="fcard-l">Mileage · your own car</div><div class="fcard-b">$0.725<span style="font-size:.9rem">/mi</span></div><div class="fcard-s">2026 rate. Covers gas, insurance &amp; upkeep. Tolls &amp; parking are separate.</div></div>
+    <div class="fcard"><div class="fcard-l">Deadline</div><div class="fcard-b">120 days</div><div class="fcard-s">Submit within 120 days. Later can be taxable. Never after 365.</div></div>
+    <div class="fcard"><div class="fcard-l">Need help?</div><div class="fcard-s" style="margin-top:0">Finance Service Center<br><span class="mono">212-854-2122</span><br><span class="mono nowrap">travel-expense.finance.columbia.edu</span></div></div>
+  </div>
+  <p class="disclaimer">A quick-guidance tool based on Columbia University's current Travel &amp; Expense and Business Expense policies. It gives the likely outcome - your department's Senior Business Officer and Accounts Payable make the final call. When unsure, ask before you spend.</p>
+</main>
+
+<script>
+/* ============ CONTENT / DECISION TREE ============ */
+const HOME = [
+  {ico:'🛒', t:'I bought something', s:'Supplies, software, books, equipment', go:'buy'},
+  {ico:'✈️', t:'I traveled', s:'Airfare, hotel, Uber, mileage, conference', go:'travel'},
+  {ico:'🍽️', t:'I paid for a meal', s:'Business meals, visitors, students, colleagues', go:'meal'},
+  {ico:'🧾', t:'I lost a receipt', s:'Find out what documentation you need', go:'receipt'},
+  {ico:'🔬', t:"I'm using a grant", s:'Check sponsored-project considerations', go:'grant_what'},
+  {ico:'⏳', t:"It's been a while", s:'See whether your reimbursement is late', go:'late'}
+];
+
+const NODES = {
+/* ---------- BUY ---------- */
+buy:{crumb:'Purchase',type:'choice',lead:"Let's see if a personal reimbursement is even the right path.",sub:"First - what did you buy?",opts:[
+  {main:'A book or journal',set:{cat:'book'},goto:'buy_amt'},
+  {main:'Routine supplies',sub:'Paper, lab consumables, small items',set:{cat:'supplies'},goto:'buy_amt'},
+  {main:'Software or a subscription',set:{cat:'software'},goto:'buy_amt'},
+  {main:'A computer, electronics, or equipment',set:{cat:'equipment'},goto:'buy_amt'},
+  {main:'Furniture',set:{cat:'furniture'},goto:'buy_amt'},
+  {main:'Something else',set:{cat:'other'},goto:'buy_amt'}
+]},
+buy_amt:{crumb:'Amount',type:'number',lead:"Roughly how much did it cost?",prefix:'$',key:'amt',next:'buy_route'},
+buy_route:{type:'router',route:c=>{
+  if(c.cat==='furniture')return 'r_buy_furniture';
+  if(c.cat==='equipment')return c.amt>2500?'r_buy_equip_big':'r_buy_equip_small';
+  if(c.cat==='software')return 'r_buy_software';
+  if(c.cat==='book')return 'r_buy_book';
+  if(c.amt>2500)return 'r_buy_over';
+  if(c.amt>=500)return 'r_buy_mid';
+  return 'r_buy_small';
+}},
+r_buy_small:{type:'result',out:'yes',subject:c=>`Supplies · $${money(c.amt)}`,
+  why:'Routine, work-related items under $500 are generally reimbursable.',
+  need:['Itemized receipt (not just the card slip)','A clear business purpose','Your ChartString (funding account)'],
+  next:['Concur → Create New Report → "CU Business Expenses"','Add the expense, attach the receipt, submit'],
+  watch:'A credit-card statement alone is not enough - you need the itemized receipt showing what you bought.',scope:'uni'},
+r_buy_mid:{type:'result',out:'approval',subject:c=>`Supplies · $${money(c.amt)}`,
+  why:'In the $500-$2,500 range it is reimbursable, but it needs financial approval first.',
+  need:['Itemized receipt','Business purpose','Your financial approver\u2019s sign-off','ChartString'],
+  next:['Submit in Concur - it routes to your approver','Next time, ask your DAF about buying through Columbia instead'],
+  watch:'Larger buys are cleaner and often cheaper through Columbia\u2019s purchasing system. Ask before you spend.',scope:'both'},
+r_buy_over:{type:'result',out:'process',subject:c=>`$${money(c.amt)} purchase`,
+  why:'Over about $2,500 this normally goes through Columbia Purchasing (a purchase order), not a personal reimbursement.',
+  need:['A conversation with your department administrator first'],
+  next:['Contact your DAF / Purchasing BEFORE you buy','They\u2019ll set up a PO or Marketplace order'],
+  watch:'Paying yourself back for big-ticket items can be denied. Get guidance first - this is the #1 avoidable rejection.',scope:'uni'},
+r_buy_book:{type:'result',out:'yes',subject:'Book / journal',
+  why:'Work-related books and journals are generally reimbursable.',
+  need:['Itemized receipt','Business purpose','ChartString'],
+  next:['Concur → "CU Business Expenses" → attach receipt → submit'],
+  watch:'Personal reading unrelated to your role isn\u2019t covered.',scope:'uni'},
+r_buy_software:{type:'result',out:'cond',subject:'Software / subscription',
+  why:'Work software can be reimbursable, but many tools should run through Columbia IT or Marketplace for licensing, security, and tax reasons.',
+  need:['Itemized invoice / receipt','Business purpose','ChartString'],
+  next:['Check with your department or CUIT first','If cleared, submit in Concur under "CU Business Expenses"'],
+  watch:'Recurring or enterprise subscriptions often shouldn\u2019t sit on a personal card. Ask before you renew.',scope:'both'},
+r_buy_equip_small:{type:'result',out:'approval',subject:c=>`Equipment · $${money(c.amt)}`,
+  why:'Smaller equipment can be reimbursed, but it often should be purchased through Columbia for asset tracking and warranty.',
+  need:['Itemized receipt','Business purpose','Financial approval','ChartString'],
+  next:['Confirm with your DAF','If reimbursing, submit in Concur for financial approval'],
+  watch:'Computers and electronics may be tagged as University assets - check before buying one personally.',scope:'both'},
+r_buy_equip_big:{type:'result',out:'process',subject:c=>`Equipment · $${money(c.amt)}`,
+  why:'Higher-value equipment - and any computer purchase - should go through Columbia Purchasing, not personal reimbursement.',
+  need:['A conversation with your department administrator first'],
+  next:['Contact your DAF / Purchasing before you buy'],
+  watch:'Buy-first-ask-later on equipment is the single most common stuck reimbursement.',scope:'uni'},
+r_buy_furniture:{type:'result',out:'process',subject:'Furniture',
+  why:'Furniture is procured through Columbia Purchasing, not personal reimbursement.',
+  need:['A conversation with your department administrator'],
+  next:['Contact your DAF to place the order through Columbia'],
+  watch:'Don\u2019t front the cost yourself - it may not come back.',scope:'uni'},
+
+/* ---------- TRAVEL ---------- */
+travel:{crumb:'Travel',type:'choice',lead:"Travel is broad - which piece are you asking about?",opts:[
+  {main:'Airfare / flight',set:{},goto:'t_air_booked'},
+  {main:'Hotel',goto:'r_t_hotel'},
+  {main:'Conference registration',goto:'r_t_conf'},
+  {main:'Meals while traveling',goto:'meal'},
+  {main:'Taxi, Uber, or transit',goto:'r_t_ground'},
+  {main:'Rental car',goto:'r_t_car'},
+  {main:'Personal car mileage',goto:'t_mile_commute'},
+  {main:'Checked baggage',goto:'r_t_baggage'},
+  {main:'In-flight or hotel Wi-Fi',goto:'r_t_wifi'},
+  {main:'Parking or tolls',goto:'r_t_parking'}
+]},
+t_air_booked:{crumb:'Airfare',type:'choice',lead:"Have you already bought the ticket?",opts:[
+  {main:'Not yet',goto:'r_t_air_book'},
+  {main:'Yes, already paid',goto:'t_air_how'}
+]},
+t_air_how:{crumb:'How booked',type:'choice',lead:"How did you book it?",opts:[
+  {main:'Through Concur Travel / World Travel',goto:'r_t_air_wti'},
+  {main:'On my own, outside Columbia\u2019s travel program',goto:'r_t_air_outside'}
+]},
+r_t_air_book:{type:'result',out:'process',subject:'Flight - not booked yet',
+  why:'Book through Concur Travel or World Travel and Columbia can pay the airfare directly (Central Pay) - so you\u2019re never out of pocket.',
+  need:['Your trip dates and business purpose'],
+  next:['Go to travel-expense.finance.columbia.edu → Concur Travel','Or call World Travel: 1-855-961-0313','Choose the Lowest Logical Fare shown'],
+  watch:'You do NOT need a refundable ticket. The standard is the cheapest non-refundable non-stop fare that fits your schedule.',scope:'uni'},
+r_t_air_wti:{type:'result',out:'yes',subject:'Flight - booked via Concur/WTI',
+  why:'Flights booked through Concur or World Travel are already policy-compliant, and Central Pay ones are billed straight to Columbia.',
+  need:['Itinerary/receipt if you paid personally','Business purpose','Conference agenda, if that\u2019s the trip'],
+  next:['If centrally paid - nothing to submit','If you paid - Concur → "CU Travel Expenses"'],
+  watch:'Keep it economy. Business or first class must be justified and the amount above coach segregated.',scope:'uni'},
+r_t_air_outside:{type:'result',out:'cond',subject:'Flight - booked on your own',
+  why:'A flight you booked yourself is still reimbursable, but you have to show it met the Lowest Logical Fare.',
+  need:['Itinerary + receipt','A Lowest-Logical-Fare comparison (screenshot of comparable fares)','Business purpose','Conference agenda if applicable'],
+  next:['Concur → "CU Travel Expenses" → attach itinerary + fare comparison'],
+  watch:'Refundable isn\u2019t required - LLF is the cheapest non-refundable non-stop. On a federal grant you must fly a U.S. carrier (Fly America) or file an exception. Book via Concur next time and this is automatic.',scope:'uni'},
+r_t_hotel:{type:'result',out:'yes',subject:'Hotel',
+  why:'Business lodging is reimbursable up to Columbia\u2019s nightly caps.',
+  need:['Itemized hotel folio','Business purpose','Conference agenda if applicable','ChartString'],
+  next:['Concur → "CU Travel Expenses" → attach the folio'],
+  watch:'Caps are about $350/night in the U.S. and $400 international. Nights added for a personal side-trip aren\u2019t covered.',scope:'uni'},
+r_t_conf:{type:'result',out:'yes',subject:'Conference registration',
+  why:'Conference registration is reimbursable with the right backup.',
+  need:['Registration receipt / proof of payment','The conference agenda, flyer, or program','Business purpose'],
+  next:['Concur → "CU Travel Expenses" → attach receipt AND agenda'],
+  watch:'A missing agenda is the single most common reason conference reports stall. Attach it every time.',scope:'uni'},
+r_t_ground:{type:'result',out:'yes',subject:'Taxi / Uber / transit',
+  why:'Taxi, rideshare, and transit for business are reimbursable when reasonable.',
+  need:['Receipts where available','Business purpose (where you went and why)'],
+  next:['Add to your Concur report','Tip: link Uber/Lyft to your Concur profile so receipts auto-import'],
+  watch:'Rideshare must be comparable to other options - a surge fare way above the subway or a car service can get trimmed.',scope:'uni'},
+r_t_car:{type:'result',out:'cond',subject:'Rental car',
+  why:'Rental cars are reimbursable - use Columbia\u2019s Hertz rate.',
+  need:['Rental agreement / receipt','Business purpose'],
+  next:['Book Hertz via Concur','Decline the extra collision coverage on domestic Hertz - Columbia\u2019s rate already includes it'],
+  watch:'DO buy insurance on non-Hertz rentals or any international rental. Economy/intermediate class only.',scope:'uni'},
+t_mile_commute:{crumb:'Mileage',type:'choice',lead:"Quick check - was this your normal commute between home and your regular campus office?",opts:[
+  {main:'Yes, that\u2019s my usual commute',goto:'r_t_commute'},
+  {main:'No - business travel beyond my normal commute',goto:'t_mile_amt'}
+]},
+r_t_commute:{type:'result',out:'no',subject:'Daily commute',
+  why:'Regular home-to-office commuting is never reimbursable.',
+  need:['Nothing - this one doesn\u2019t qualify'],
+  next:['No submission needed'],
+  watch:'Rare exceptions (a work site outside normal commuting distance) need HR/Controller pre-approval and are taxable.',scope:'uni'},
+t_mile_amt:{crumb:'Miles',type:'number',lead:"How many business miles did you drive (round trip)?",unit:'miles',key:'miles',next:'r_t_mileage'},
+r_t_mileage:{type:'result',out:'yes',subject:c=>`${money(c.miles)} business miles`,
+  calc:c=>({big:`$${(Math.round(c.miles*72.5)/100).toFixed(2)}`,cap:`${money(c.miles)} mi × $0.725 (2026 rate)`}),
+  why:'Mileage for business driving is reimbursable at the 2026 IRS rate.',
+  need:['Your route / total miles (a map printout is commonly asked for)','Business purpose'],
+  next:['Concur → add "Personal Vehicle Mileage"','Add tolls & parking as separate lines'],
+  watch:'Gas isn\u2019t separately reimbursable - the mileage rate already covers fuel, insurance, and upkeep.',scope:'both'},
+r_t_baggage:{type:'result',out:'yes',subject:'Checked baggage',
+  why:'A first or second checked bag for business travel is reimbursable.',
+  need:['Baggage fee receipt','Business purpose'],
+  next:['Add as a line on your "CU Travel Expenses" report'],
+  watch:'Keep it reasonable - extra or overweight bags for personal reasons aren\u2019t covered.',scope:'uni'},
+r_t_wifi:{type:'result',out:'yes',subject:'Travel Wi-Fi',
+  why:'In-flight or hotel Wi-Fi you needed to work is a reimbursable travel incidental.',
+  need:['Receipt','Business purpose'],
+  next:['Add as a line on your travel report'],
+  watch:'This is travel Wi-Fi only. Your home internet is not reimbursable.',scope:'uni'},
+r_t_parking:{type:'result',out:'yes',subject:'Parking / tolls',
+  why:'Necessary business parking and tolls are reimbursable.',
+  need:['Receipts','Business purpose'],
+  next:['Add as separate lines on your report'],
+  watch:'Parking tickets and moving violations are never reimbursable.',scope:'uni'},
+
+/* ---------- MEAL ---------- */
+meal:{crumb:'Meal',type:'choice',lead:"Meals are all about who was there and why. Who was at this one?",opts:[
+  {main:'Just me (traveling)',set:{who:'solo'},goto:'meal_which'},
+  {main:'Columbia colleagues or staff',set:{who:'internal'},goto:'meal_which'},
+  {main:'Students',set:{who:'students'},goto:'meal_which'},
+  {main:'A candidate I\u2019m recruiting',set:{who:'guest'},goto:'meal_which'},
+  {main:'A donor or alum',set:{who:'guest'},goto:'meal_which'},
+  {main:'An external collaborator or visitor',set:{who:'guest'},goto:'meal_which'}
+]},
+meal_which:{crumb:'Which meal',type:'choice',lead:"Which meal was it?",opts:[
+  {main:'Breakfast',sub:'Limit $25 / person',set:{cap:25,mealName:'breakfast'},goto:'meal_calc'},
+  {main:'Lunch',sub:'Limit $35 / person',set:{cap:35,mealName:'lunch'},goto:'meal_calc'},
+  {main:'Dinner',sub:'Limit $75 / person',set:{cap:75,mealName:'dinner'},goto:'meal_calc'}
+]},
+meal_calc:{crumb:'Itemize',type:'mealcalc',lead:"Let\u2019s itemize this for Concur - enter the numbers straight off your receipt.",next:'meal_route'},
+meal_route:{type:'router',route:c=>(c.over>0.004||c.tipOver>0.004)?'r_meal_over':'r_meal_ok'},
+r_meal_ok:{type:'result',out:'yes',
+  subject:c=>`${cap(c.mealName)} · $${money(c.combined)} for ${c.people} ${c.people===1?'person':'people'}`,
+  why:c=>`Food + alcohol ($${money(c.combined)}) is within Columbia\u2019s $${c.cap}/person ${c.mealName} limit for ${c.people} ${c.people===1?'person':'people'} ($${money(c.totalCap)} total).`,
+  need:c=>c.who==='solo'
+    ?['Itemized receipt (not just the card slip)','Business purpose','ChartString']
+    :['Itemized receipt (not just the card slip)','Attendees + each person\u2019s relationship to Columbia (headcount if over 10)','A clear business purpose','ChartString'],
+  next:['Concur → add the meal expense type','Itemize using the amounts above → add attendees → business purpose → attach receipt → submit'],
+  watch:'Alcohol can be reimbursed, but it must sit on its own itemized line and never be charged to a grant.',
+  itemize:true,
+  builder:c=>c.who!=='solo',scope:'uni'},
+r_meal_over:{type:'result',out:'approval',
+  subject:c=>`${cap(c.mealName)} · $${money(c.combined)} for ${c.people} ${c.people===1?'person':'people'}`,
+  calc:c=>({big:`$${money(c.over+c.tipOver)} over`,cap:`$${money(c.combined)} vs. the $${money(c.totalCap)} ${c.mealName} limit ($${c.cap}/person × ${c.people})`}),
+  why:c=>`Food + alcohol ($${money(c.combined)}) is $${money(c.over)} over Columbia\u2019s $${c.cap}/person ${c.mealName} limit for ${c.people} ${c.people===1?'person':'people'}.${c.tipOver>0.004?` Tip is also $${money(c.tipOver)} over the 20% max.`:''}`,
+  need:['Itemized receipt','Attendees + relationships to Columbia','Business purpose','A written justification for the overage','Your SBO\u2019s approval'],
+  next:['Submit in Concur - itemize using the amounts above; the excess is segregated automatically','It routes to your school\u2019s SBO for sign-off'],
+  watch:'It\u2019s not auto-denied - a solid justification usually clears it, but expect the Meal Segregated amount to need approval.',
+  itemize:true,
+  builder:c=>c.who!=='solo',scope:'both'},
+
+/* ---------- RECEIPT ---------- */
+receipt:{crumb:'Lost receipt',type:'number',lead:"Lost receipts are recoverable - let\u2019s figure out the path. How much was the expense?",prefix:'$',key:'amt',next:'receipt_type'},
+receipt_type:{crumb:'Type',type:'choice',lead:"What was it for?",opts:[
+  {main:'Airfare / flight',goto:'r_rcpt_strict'},
+  {main:'Hotel',goto:'r_rcpt_strict'},
+  {main:'Rental car',goto:'r_rcpt_strict'},
+  {main:'A meal',goto:'receipt_route'},
+  {main:'Something else',goto:'receipt_route'}
+]},
+receipt_route:{type:'router',route:c=>c.amt<50?'r_rcpt_under':'r_rcpt_over'},
+r_rcpt_strict:{type:'result',out:'cond',subject:'Lost travel receipt',
+  why:'Airfare, hotel, and rental-car expenses need real documentation no matter the amount - so an affidavit usually won\u2019t substitute.',
+  need:['A duplicate receipt from the merchant'],
+  next:['Ask the airline, hotel, or rental agency to re-send the itemized receipt/folio - they always can','Attach it in Concur'],
+  watch:'A credit-card charge alone isn\u2019t enough for these. Get the real itinerary or folio emailed to you.',scope:'uni'},
+r_rcpt_under:{type:'result',out:'cond',subject:c=>`Lost receipt · $${money(c.amt)}`,
+  why:'For a lost receipt under $50, Columbia\u2019s missing-receipt process can stand in.',
+  need:['A Missing Receipt Affidavit','Business purpose','Financial approval'],
+  next:['In Concur, attach the affidavit to the expense line and submit'],
+  watch:'Still try the merchant for a duplicate first - a real receipt is always cleaner.',scope:'uni'},
+r_rcpt_over:{type:'result',out:'approval',subject:c=>`Lost receipt · $${money(c.amt)}`,
+  why:'Over $50 without a receipt is reimbursable but gets more scrutiny.',
+  need:['A merchant duplicate if at all possible','Otherwise: a Missing Receipt Affidavit + written justification + financial approval'],
+  next:['Attach what you have in Concur with a clear explanation'],
+  watch:'Repeated missing receipts on larger amounts can be denied. Snap every receipt in the Concur app going forward.',scope:'uni'},
+
+/* ---------- GRANT ---------- */
+grant_what:{crumb:'On a grant',type:'choice',lead:"On a sponsored project - what\u2019s the expense?",opts:[
+  {main:'Airfare / travel',goto:'r_grant_air'},
+  {main:'Alcohol or entertainment',goto:'r_grant_alcohol'},
+  {main:'Meals or food',goto:'r_grant_meals'},
+  {main:'Equipment or supplies',goto:'r_grant_equip'},
+  {main:'Something else',goto:'r_grant_other'}
+]},
+r_grant_air:{type:'result',out:'approval',subject:'Grant travel',
+  why:'Travel can be allowable, but federal awards require a U.S. carrier under the Fly America Act.',
+  need:['A U.S. carrier (or codeshare) flight - or a completed Fly America Exception form','An award/budget allowability check'],
+  next:['Confirm with your grants administrator before booking','Book through Concur'],
+  watch:'A foreign-carrier ticket with no exception can be disallowed. This trips up new PIs constantly.',scope:'uni'},
+r_grant_alcohol:{type:'result',out:'no',subject:'Alcohol / entertainment on a grant',
+  why:'Alcohol and entertainment can never be charged to a sponsored project.',
+  need:['A non-sponsored account to charge it to instead'],
+  next:['Charge these to a department account and segregate them'],
+  watch:'Even burying alcohol inside a grant-funded meal is a compliance problem. Keep it off the award.',scope:'uni'},
+r_grant_meals:{type:'result',out:'approval',subject:'Grant meals',
+  why:'Meals on a grant depend entirely on the award\u2019s terms.',
+  need:['An award/budget allowability check','Itemized receipt, attendees, business purpose'],
+  next:['Clear it with your grants administrator, then submit in Concur'],
+  watch:'Many federal awards restrict food. Check before you host.',scope:'both'},
+r_grant_equip:{type:'result',out:'approval',subject:'Grant equipment / supplies',
+  why:'Equipment and supplies may be allowable, but often need budget room and sometimes prior sponsor approval.',
+  need:['Budget / allowability check','Possibly prior sponsor approval','Itemized receipt'],
+  next:['Confirm with your grants administrator before buying'],
+  watch:'Buying near an award\u2019s end date, or off-budget, gets flagged fast.',scope:'both'},
+r_grant_other:{type:'result',out:'process',subject:'Grant expense',
+  why:'Allowable under University policy doesn\u2019t mean allowable on your award - sponsor terms, federal rules, and the budget all still apply.',
+  need:['A check against the award terms'],
+  next:['Confirm with your grants administrator (DAF / SPA) before spending'],
+  watch:'When in doubt, ask first. Unallowable charges bounce back to your department.',scope:'seas'},
+
+/* ---------- LATE ---------- */
+late:{crumb:'Timing',type:'date',lead:"Deadlines are real but recoverable up to a point. When did you incur the expense - or when did your trip end?",key:'date',next:'late_route'},
+late_route:{type:'router',route:c=>{
+  const d=daysSince(c.date); c.days=d;
+  if(d<=120)return 'r_late_ok';
+  if(d<=365)return 'r_late_over120';
+  return 'r_late_over365';
+}},
+r_late_ok:{type:'result',out:'yes',subject:c=>`${c.days} days ago`,
+  calc:c=>({big:`${c.days} days`,cap:'inside the 120-day window'}),
+  why:c=>`That was ${c.days} days ago - you\u2019re inside Columbia\u2019s 120-day window.`,
+  need:['Your receipts and business purpose'],
+  next:['Submit now in Concur - sooner is better (the target is 10 business days)'],
+  watch:'Don\u2019t sit on it. Past 120 days it can become taxable income to you.',scope:'uni'},
+r_late_over120:{type:'result',out:'approval',subject:c=>`${c.days} days ago`,
+  calc:c=>({big:`${c.days} days`,cap:'past the 120-day window'}),
+  why:c=>`That was ${c.days} days ago - past Columbia\u2019s 120-day window.`,
+  need:['A written justification for the delay','Financial approval'],
+  next:['Submit immediately in Concur with your explanation'],
+  watch:'Amounts past 120 days may be reported as taxable income (W-2), depending on the circumstances.',scope:'uni'},
+r_late_over365:{type:'result',out:'no',subject:c=>`${c.days} days ago`,
+  calc:c=>({big:`${c.days} days`,cap:'beyond the one-year cutoff'}),
+  why:c=>`That was ${c.days} days ago - beyond the one-year cutoff.`,
+  need:['Nothing standard - the window has closed'],
+  next:['Talk to your department if there were truly extraordinary circumstances'],
+  watch:'There\u2019s no routine path to recover expenses over a year old. File within a year.',scope:'uni'}
+};
+
+/* ============ ENGINE ============ */
+const OUT={
+  yes:{cls:'rc-yes',ico:'\u2713',label:'Yes - Reimbursable'},
+  cond:{cls:'rc-cond',ico:'\u2713',label:'Yes, with conditions'},
+  approval:{cls:'rc-approval',ico:'\u26A0',label:'Approval required'},
+  no:{cls:'rc-no',ico:'\u2715',label:'No'},
+  process:{cls:'rc-process',ico:'\u21AA',label:'Use another Columbia process'}
+};
+const SCOPE={
+  uni:[{c:'scope-uni',t:'University-wide policy'}],
+  seas:[{c:'scope-seas',t:'SEAS / department practice'}],
+  both:[{c:'scope-uni',t:'University rule'},{c:'scope-seas',t:'SEAS / dept routing'}]
+};
+
+let stack=[], ctx={};
+const stageEl=document.getElementById('stage');
+const crumbsEl=document.getElementById('crumbs');
+
+function money(n){n=Number(n);return Number.isInteger(n)?n.toLocaleString():n.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});}
+function cap(s){return s?s.charAt(0).toUpperCase()+s.slice(1):s;}
+function daysSince(str){const d=new Date(str+'T00:00:00');const diff=Math.floor((Date.now()-d.getTime())/86400000);return Math.max(diff,0);}
+function val(x,c){return typeof x==='function'?x(c):x;}
+function r2(n){return Math.round((n+Number.EPSILON)*100)/100;}
+
+/* Shared Concur itemization card - used by both the live calculator preview and the result screen */
+function itemizationHTML(v,mealName){
+  const segNote=(v.over>0.004||v.tipOver>0.004)?'Amount over the cap - still reimbursed':'Nothing over the cap this time';
+  const mealLabel=(v.people>1)?'Group Meal':'Individual Meal';
+  return `<div class="item-block">
+    <div class="item-hd">Enter these on the Itemizations tab in Concur</div>
+    <div class="item-row"><div class="item-l"><strong>${mealLabel}</strong><span>Food up to the cap, with alcohol removed</span></div><div class="item-amt">$${money(v.mealLine)}</div></div>
+    <div class="item-row"><div class="item-l"><strong>Alcoholic Beverages</strong><span>Alcohol portion - required separate line</span></div><div class="item-amt">$${money(v.alcohol)}</div></div>
+    <div class="item-row"><div class="item-l"><strong>Tax/Tip/Gratuity</strong><span>Tax + tip within the 20% policy max</span></div><div class="item-amt">$${money(v.taxTipLine)}</div></div>
+    <div class="item-row"><div class="item-l"><strong>Meal Segregated</strong><span>${segNote}</span></div><div class="item-amt">$${money(v.segLine)}</div></div>
+    <div class="item-row total"><div class="item-l"><strong>Receipt total</strong></div><div class="item-amt">$${money(v.total)}</div></div>
+  </div>`;
+}
+
+function home(){stack=[];ctx={};renderHome();}
+function go(id){const n=NODES[id];if(n&&n.type==='router'){return go(n.route(ctx));}stack.push(id);render();}
+function back(){if(stack.length){stack.pop();}stack.length?render():renderHome();}
+
+function renderCrumbs(){
+  let items=['<b>Start</b>'];
+  stack.forEach(id=>{const n=NODES[id];if(n&&n.crumb)items.push(n.crumb);});
+  crumbsEl.innerHTML=items.map((t,i)=>i===0?t:`<span class="sep">›</span> ${t}`).join(' ');
+}
+
+function renderHome(){
+  crumbsEl.innerHTML='<b>Start</b> <span class="sep">›</span> What happened?';
+  stageEl.innerHTML=`
+    <div class="lead">What happened?</div>
+    <div class="sub">Pick the closest fit - you can always back out.</div>
+    <div class="tiles">${HOME.map((h,i)=>`
+      <button class="tile" data-go="${h.go}">
+        <span class="tile-ico">${h.ico}</span>
+        <span><span class="tile-t">${h.t}</span><span class="tile-s">${h.s}</span></span>
+      </button>`).join('')}</div>`;
+  stageEl.querySelectorAll('.tile').forEach(b=>b.onclick=()=>go(b.dataset.go));
+  restage();
+}
+
+function render(){
+  const node=NODES[stack[stack.length-1]];
+  renderCrumbs();
+  if(node.type==='choice')renderChoice(node);
+  else if(node.type==='number')renderNumber(node);
+  else if(node.type==='date')renderDate(node);
+  else if(node.type==='mealcalc')renderMealCalc(node);
+  else if(node.type==='result')renderResult(node);
+  restage();
+}
+function restage(){stageEl.style.animation='none';void stageEl.offsetWidth;stageEl.style.animation='';}
+
+function navRow(showBack=true){
+  return `<div class="stage-nav">
+    ${showBack?'<button class="nav-btn" id="backBtn">← Back</button>':''}
+    <button class="nav-btn primary" id="homeBtn">Start over</button>
+  </div>`;
+}
+function wireNav(){
+  const b=document.getElementById('backBtn');if(b)b.onclick=back;
+  const h=document.getElementById('homeBtn');if(h)h.onclick=home;
+}
+
+function renderChoice(node){
+  stageEl.innerHTML=`
+    <div class="lead">${val(node.lead,ctx)}</div>
+    ${node.sub?`<div class="sub">${node.sub}</div>`:'<div style="height:.6rem"></div>'}
+    <div class="opts">${node.opts.map((o,i)=>`
+      <button class="opt" data-i="${i}">
+        <span><span class="opt-main">${o.main}</span>${o.sub?`<span class="opt-sub">${o.sub}</span>`:''}</span>
+        <span class="opt-arrow">→</span>
+      </button>`).join('')}</div>
+    ${navRow()}`;
+  stageEl.querySelectorAll('.opt').forEach(btn=>btn.onclick=()=>{
+    const o=node.opts[btn.dataset.i];
+    if(o.set)Object.assign(ctx,o.set);
+    go(o.goto);
+  });
+  wireNav();
+}
+
+function renderNumber(node){
+  stageEl.innerHTML=`
+    <div class="lead">${val(node.lead,ctx)}</div>
+    <div style="height:.7rem"></div>
+    <div class="field">
+      <div class="field-wrap">
+        ${node.prefix?`<span class="field-prefix">${node.prefix}</span>`:''}
+        <input id="numIn" type="number" inputmode="decimal" min="0" step="any" placeholder="0" class="${node.prefix?'has-prefix':''}">
+      </div>
+      ${node.unit?`<span class="field-unit">${node.unit}</span>`:''}
+      <button class="go-btn" id="numGo" disabled>Continue</button>
+    </div>
+    ${navRow()}`;
+  const inp=document.getElementById('numIn'),btn=document.getElementById('numGo');
+  const ok=()=>{const v=parseFloat(inp.value);btn.disabled=!(v>=0&&inp.value!=='');};
+  inp.addEventListener('input',ok);
+  const submit=()=>{const v=parseFloat(inp.value);if(!(v>=0))return;ctx[node.key]=v;go(node.next);};
+  btn.onclick=submit;
+  inp.addEventListener('keydown',e=>{if(e.key==='Enter'&&!btn.disabled)submit();});
+  wireNav();inp.focus();
+}
+
+function renderDate(node){
+  const today=new Date().toISOString().slice(0,10);
+  stageEl.innerHTML=`
+    <div class="lead">${val(node.lead,ctx)}</div>
+    <div style="height:.7rem"></div>
+    <div class="field">
+      <div class="field-wrap"><input id="dateIn" type="date" max="${today}"></div>
+      <button class="go-btn" id="dateGo" disabled>Continue</button>
+    </div>
+    ${navRow()}`;
+  const inp=document.getElementById('dateIn'),btn=document.getElementById('dateGo');
+  inp.addEventListener('input',()=>btn.disabled=!inp.value);
+  const submit=()=>{if(!inp.value)return;ctx[node.key]=inp.value;go(node.next);};
+  btn.onclick=submit;
+  inp.addEventListener('keydown',e=>{if(e.key==='Enter'&&!btn.disabled)submit();});
+  wireNav();
+}
+
+function renderMealCalc(node){
+  if(ctx.people==null)ctx.people=1;
+  stageEl.innerHTML=`
+    <div class="lead">${val(node.lead,ctx)}</div>
+    <div class="sub">We'll calculate what to put on each Concur itemization line - no need to work out a per-person cost yourself.</div>
+    <div class="mc-people">
+      <div class="mc-people-lbl"><strong>Number of guests</strong><span>Everyone the meal was for, including you if you ate</span></div>
+      <div class="mc-stepper">
+        <button type="button" class="mc-step-btn" id="mcMinus">&minus;</button>
+        <div class="mc-people-val" id="mcPeopleVal">${ctx.people}</div>
+        <button type="button" class="mc-step-btn" id="mcPlus">&plus;</button>
+      </div>
+    </div>
+    <div class="mc-grid">
+      <div class="mc-row">
+        <div class="mc-row-l"><div class="mc-row-t">Subtotal</div><div class="mc-row-s">Food + drinks, before tax &amp; tip</div></div>
+        <div class="mc-row-r"><span class="mc-dollar">$</span><input class="mc-inp" id="mcSub" type="number" min="0" step="0.01" placeholder="0.00"></div>
+      </div>
+      <div class="mc-row">
+        <div class="mc-row-l"><div class="mc-row-t">Alcohol portion</div><div class="mc-row-s">Part of the subtotal above that was alcohol</div></div>
+        <div class="mc-row-r"><span class="mc-dollar">$</span><input class="mc-inp" id="mcAlc" type="number" min="0" step="0.01" placeholder="0.00"></div>
+      </div>
+      <div class="mc-row">
+        <div class="mc-row-l"><div class="mc-row-t">Tax</div><div class="mc-row-s">Tax line from the receipt</div></div>
+        <div class="mc-row-r"><span class="mc-dollar">$</span><input class="mc-inp" id="mcTax" type="number" min="0" step="0.01" placeholder="0.00"></div>
+      </div>
+      <div class="mc-row">
+        <div class="mc-row-l"><div class="mc-row-t">Tip</div><div class="mc-row-s" id="mcTipSub">Tip left on the receipt</div></div>
+        <div class="mc-row-r"><span class="mc-dollar">$</span><input class="mc-inp" id="mcTip" type="number" min="0" step="0.01" placeholder="0.00"></div>
+      </div>
+    </div>
+    <div id="mcAlert"></div>
+    <div id="mcPreview"></div>
+    <button class="go-btn" id="mcGo" style="width:100%;padding:.8rem;margin-top:.2rem" disabled>Continue</button>
+    ${navRow()}`;
+  wireMealCalc(node);
+  wireNav();
+}
+
+function wireMealCalc(node){
+  const peopleVal=document.getElementById('mcPeopleVal');
+  const minus=document.getElementById('mcMinus'),plus=document.getElementById('mcPlus');
+  const sub=document.getElementById('mcSub'),alc=document.getElementById('mcAlc'),tax=document.getElementById('mcTax'),tip=document.getElementById('mcTip');
+  const goBtn=document.getElementById('mcGo');
+  const preview=document.getElementById('mcPreview');
+  const alertBox=document.getElementById('mcAlert');
+  const tipSub=document.getElementById('mcTipSub');
+
+  // restore values if the user navigated back to this step
+  if(ctx.subtotal!=null)sub.value=ctx.subtotal;
+  if(ctx.alcohol!=null)alc.value=ctx.alcohol;
+  if(ctx.taxAmt!=null)tax.value=ctx.taxAmt;
+  if(ctx.tipAmt!=null)tip.value=ctx.tipAmt;
+
+  minus.onclick=()=>{ctx.people=Math.max(1,(ctx.people||1)-1);peopleVal.textContent=ctx.people;update();};
+  plus.onclick=()=>{ctx.people=(ctx.people||1)+1;peopleVal.textContent=ctx.people;update();};
+
+  function compute(){
+    const people=ctx.people||1;
+    const subtotal=r2(parseFloat(sub.value)||0);
+    const alcohol=r2(Math.min(parseFloat(alc.value)||0,subtotal));
+    const taxAmt=r2(parseFloat(tax.value)||0);
+    const tipAmt=r2(parseFloat(tip.value)||0);
+    const perCap=ctx.cap;
+    const totalCap=r2(perCap*people);
+    const combined=subtotal;
+    const tipMax=r2(combined*0.20);
+    const tipAllowed=r2(Math.min(tipAmt,tipMax));
+    const tipOver=r2(Math.max(0,tipAmt-tipMax));
+    const over=r2(Math.max(0,combined-totalCap));
+    const underCap=r2(Math.min(combined,totalCap));
+    const mealLine=r2(Math.max(0,underCap-alcohol));
+    const segLine=r2(over+tipOver);
+    const taxTipLine=r2(taxAmt+tipAllowed);
+    const total=r2(subtotal+taxAmt+tipAmt);
+    return{people,subtotal,alcohol,tax:taxAmt,tip:tipAmt,perCap,totalCap,combined,tipMax,tipAllowed,tipOver,over,mealLine,segLine,taxTipLine,total};
+  }
+
+  function update(){
+    const v=compute();
+    if(v.subtotal===0&&v.alcohol===0&&v.tax===0&&v.tip===0){
+      preview.innerHTML='';alertBox.innerHTML='';
+      sub.classList.remove('warn');alc.classList.remove('warn');tip.classList.remove('over');
+      tipSub.textContent='Tip left on the receipt';
+      goBtn.disabled=true;
+      return;
+    }
+    goBtn.disabled=!(sub.value!=='' && v.subtotal>0);
+    sub.classList.toggle('warn',v.combined>v.totalCap+0.004);
+    alc.classList.toggle('warn',v.combined>v.totalCap+0.004);
+    tip.classList.toggle('over',v.tipOver>0.004);
+    tipSub.textContent=v.combined>0?`Max allowed: $${money(v.tipMax)} (20% of $${money(v.combined)})`:'Tip left on the receipt';
+
+    preview.innerHTML=itemizationHTML(v,ctx.mealName);
+
+    const capLabel=v.people>1?`$${v.perCap} × ${v.people} = $${money(v.totalCap)}`:`$${money(v.totalCap)}`;
+    const alerts=[];
+    if(v.over>0.004){
+      alerts.push({type:'warn',msg:`Food + alcohol ($${money(v.combined)}) is $${money(v.over)} over the ${capLabel} ${ctx.mealName} cap. That amount goes on the Meal Segregated line and may need SBO approval.`});
+    }else{
+      alerts.push({type:'ok',msg:`Food + alcohol ($${money(v.combined)}) is within the ${capLabel} cap.`});
+    }
+    if(v.tipOver>0.004){
+      alerts.push({type:'warn',msg:`Tip of $${money(v.tip)} is over the 20% max ($${money(v.tipMax)}). The extra $${money(v.tipOver)} is added to Meal Segregated - per policy, tips over 20% aren\u2019t reimbursed.`});
+    }
+    alertBox.innerHTML=alerts.map(a=>`<div class="mc-alert ${a.type}"><span>${a.type==='ok'?'✓':'!'}</span><span>${a.msg}</span></div>`).join('');
+  }
+
+  [sub,alc,tax,tip].forEach(i=>i.addEventListener('input',update));
+  goBtn.onclick=()=>{
+    const v=compute();
+    if(!(v.subtotal>0))return;
+    Object.assign(ctx,{
+      people:v.people,subtotal:v.subtotal,alcohol:v.alcohol,taxAmt:v.tax,tipAmt:v.tip,
+      combined:v.combined,totalCap:v.totalCap,over:v.over,tipOver:v.tipOver,
+      mealLine:v.mealLine,taxTipLine:v.taxTipLine,segLine:v.segLine,total:v.total
+    });
+    go(node.next);
+  };
+  sub.addEventListener('keydown',e=>{if(e.key==='Enter'&&!goBtn.disabled)goBtn.click();});
+  update();
+  sub.focus();
+}
+
+function renderResult(node){
+  const m=OUT[node.out];
+  const need=val(node.need,ctx)||[];
+  const next=val(node.next,ctx)||[];
+  const calc=node.calc?val(node.calc,ctx):null;
+  const subject=node.subject?val(node.subject,ctx):'';
+  const scopePills=(SCOPE[node.scope]||[]).map(s=>`<span class="scope-pill ${s.c}">${s.t}</span>`).join('');
+  const showBuilder=node.builder?val(node.builder,ctx):false;
+  const showItemize=node.itemize?val(node.itemize,ctx):false;
+  stageEl.innerHTML=`
+    <div class="rcard ${m.cls}">
+      <div class="rc-banner"><span class="rc-ico">${m.ico}</span>${m.label}</div>
+      <div class="rc-body">
+        ${subject?`<div class="rc-subject">${subject}</div>`:''}
+        ${calc?`<div class="calc"><div class="calc-big">${calc.big}</div><div class="calc-cap">${calc.cap}</div></div>`:''}
+        <div class="rc-why">${val(node.why,ctx)}</div>
+        ${showItemize?itemizationHTML(ctx,ctx.mealName):''}
+        <div class="rc-block rc-need"><div class="rc-h">What you need</div>
+          <ul class="rc-list">${need.map(x=>`<li>${x}</li>`).join('')}</ul></div>
+        <div class="rc-block rc-next"><div class="rc-h">Do this next</div>
+          <ul class="rc-list">${next.map(x=>`<li>${x}</li>`).join('')}</ul></div>
+        <div class="rc-watch"><b>⚠ Watch out</b>${val(node.watch,ctx)}</div>
+        ${showBuilder?builderHTML():''}
+        <div class="rc-scope">${scopePills}</div>
+      </div>
+    </div>
+    ${navRow()}`;
+  if(showBuilder)wireBuilder();
+  wireNav();
+}
+
+/* Business Purpose Builder */
+function builderHTML(){
+  return `<div class="builder">
+    <div class="builder-t">Business Purpose Builder - write one a stranger would understand</div>
+    <input id="bpWho" placeholder="Who you met with (e.g., Prof. Lee + NSF collaborator)">
+    <input id="bpWhy" placeholder="What you discussed / the Columbia goal (e.g., a joint NSF proposal)">
+    <div class="builder-out" id="bpOut"><span class="ph">Your business purpose will appear here…</span></div>
+    <button class="builder-copy" id="bpCopy">Copy</button>
+  </div>`;
+}
+function wireBuilder(){
+  const who=document.getElementById('bpWho'),why=document.getElementById('bpWhy'),out=document.getElementById('bpOut'),copy=document.getElementById('bpCopy');
+  const upd=()=>{
+    if(!who.value&&!why.value){out.innerHTML='<span class="ph">Your business purpose will appear here…</span>';return;}
+    const w=who.value.trim()||'[who attended]', y=why.value.trim()||'[the Columbia business goal]';
+    out.textContent=`Meal with ${w} to discuss ${y}.`;
+  };
+  who.addEventListener('input',upd);why.addEventListener('input',upd);
+  copy.onclick=()=>{const t=out.textContent;if(t.includes('appear here'))return;navigator.clipboard&&navigator.clipboard.writeText(t);copy.textContent='Copied ✓';setTimeout(()=>copy.textContent='Copy',1400);};
+}
+
+home();
+</script>
+</body>
+</html>
